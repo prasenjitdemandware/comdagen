@@ -1,7 +1,7 @@
 # catalog configuration
 catalogs:
   # number of master catalogs
-  elementCount: 3
+  elementCount: 2
 
   initialSeed: 1234
 
@@ -10,7 +10,7 @@ catalogs:
 
   # number of categories per catalog
   categories:
-    elementCount: 50
+    elementCount: 5
     categoryTreeDepth: 5
     categoryTreeBreadth: 10
 
@@ -76,7 +76,7 @@ catalogs:
 
   products:
     # number of standard products per catalog
-    elementCount: 100
+    elementCount: 10000
     generatedAttributes:
       elementCount: 20
       thereofSearchable: 5
@@ -96,7 +96,7 @@ catalogs:
   variationProducts:
     # list of different variation master product configs
       # number of master products to generate per configuration
-    - elementCount: 30
+    - elementCount: 2
       # define local variation attributes
       localVariationAttributes:
         - name: "color"
@@ -117,14 +117,14 @@ catalogs:
       # reference shared variation attributes to use
       sharedVariationAttributes:
         - "size"
-    - elementCount: 20
+    - elementCount: 2
       sharedVariationAttributes:
         - "color"
         - "size"
 
   bundleConfig:
     # number of product bundles to generate
-    elementCount: 10
+    elementCount: 2
 
     # define range of bundled products per bundle
     minBundledProducts: 2
@@ -132,9 +132,8 @@ catalogs:
 
   productSets:
     # number of product sets to generate
-    elementCount: 10
+    elementCount: 2
 
     # define range of products per product set
     minSetProducts: 3
     maxSetProducts: 8
-

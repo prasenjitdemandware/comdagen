@@ -2,17 +2,17 @@ coupons:
     outputFilePattern: "coupons.xml"
 
     # number of code list coupons to generate
-    elementCount: 100
+    elementCount: 5
     # minimum number of codes per coupon
     minCodes: 1
     # maximum number of codes per coupon
-    maxCodes: 300
+    maxCodes: 5
 
     # number of single code coupons to generate
-    singleCodeCoupons: 100
+    singleCodeCoupons: 2
 
     # number of system code coupons to generate
-    systemCodeCoupons: 100
+    systemCodeCoupons: 3
     systemCodes:
         # range of maximum system codes
         minCodes: 1

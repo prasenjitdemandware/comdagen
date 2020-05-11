@@ -10,3 +10,4 @@
 *.zip
 *.jfr
 dependency-reduced-pom.xml
+*.txt

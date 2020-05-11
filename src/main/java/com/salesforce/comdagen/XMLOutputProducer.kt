@@ -108,6 +108,18 @@ constructor(
     }
 
     @Throws(IOException::class)
+    private fun renderPricebook(generator: PricebookGenerator, pbName: String) {
+        val templateName = generator.generatorTemplate
+        val modelData = mapOf("gen" to generator)
+        File("$outputDir/${generator.configuration.outputDir}").apply { mkdirs() }
+        produce(
+                templateName,
+                "${generator.configuration.outputDir}/${pbName}",
+                modelData
+        )
+    }
+
+    @Throws(IOException::class)
     private fun render(templateName: String, generator: Generator<*, *>, currentGeneratorIndex: Int = 0) {
         val modelData = mapOf("gen" to generator)
         File("$outputDir/${generator.configuration.outputDir}").apply { mkdirs() }
@@ -376,7 +388,27 @@ constructor(
 
 
             LOGGER.info("Start rendering pricebooks with template ${pricebookGenerator.generatorTemplate}")
-            render(pricebookGenerator, index)
+
+            var currencies: List<SupportedCurrency>
+            currencies = generator.configuration.sites.get(0).currencies
+
+            val rng = Random(pricebookGenerator.configuration.initialSeed)
+
+            for (currency in currencies) {
+                for (i in (1..pricebookGenerator.configuration.elementCount)) {
+                    //for (variationIndex in (1..sourceCodeGenerators.first().configuration.elementCount)) {
+                        //var pbName = "$variationIndex-$i-NewPricebook-SC.xml"
+                        var pbName = "$i-NewPricebook-SC.xml"
+                        val seed = rng.nextLong()
+                        pricebookGenerator.configuration.currency = currency.name
+                        pricebookGenerator.configuration.index = i
+                        pricebookGenerator.configuration.seed = seed
+                        pricebookGenerator.configuration.pbName = pbName
+                        LOGGER.info("Rendering pricebook ${currency} ${i}")
+                        renderPricebook(pricebookGenerator, pbName)
+                    //}
+                }
+            }
         }
 
         // render customer lists

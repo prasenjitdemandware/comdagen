@@ -1,6 +1,6 @@
 promotions:
   productConfig:
-    elementCount: 100
+    elementCount: 5
     # discount in percent
     minDiscount: 1
     maxDiscount: 50

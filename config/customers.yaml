@@ -1,7 +1,7 @@
 # customer list configuration
 customers:
     # number of customers
-    elementCount: 1000
+    elementCount: 5
     outputDir: "customer-lists"
 
     # each customer needs a valid (no 'example.net' or localhost - see #18) email address

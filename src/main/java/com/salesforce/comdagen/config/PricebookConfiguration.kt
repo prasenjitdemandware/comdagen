@@ -51,6 +51,12 @@ data class PricebookConfiguration(
      */
     val maxAmountCount: Int = 5,
 
+    var index: Int = 1,
+    var currency: String = "test",
+    var seed: Long = 1,
+    var pbName: String = "test",
+
+
     /**
      * overwrites site currencies
      */

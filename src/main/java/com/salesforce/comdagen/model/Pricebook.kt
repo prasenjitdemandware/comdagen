@@ -9,7 +9,11 @@ package com.salesforce.comdagen.model
 
 import com.salesforce.comdagen.config.PricebookConfiguration
 import com.salesforce.comdagen.generator.CatalogGenerator
+import java.io.File
+import java.io.FileOutputStream
+import java.security.SecureRandom
 import java.util.*
+import kotlin.math.round
 
 /**
  * Abstract Pricebook
@@ -31,7 +35,7 @@ abstract class Pricebook(
     protected val config: PricebookConfiguration, val currency: String, protected val seed: Long,
     private val attributeDefinitions: Set<AttributeDefinition>,
     private val productIds: Sequence<String>,
-    private val index: Int, private val catalogHashCode: Int
+    private val index: Int, private val catalogHashCode: Int, private val pbName: String
 ) {
     val pricetables: Sequence<PriceTable>
         get() {
@@ -44,7 +48,7 @@ abstract class Pricebook(
     open val salePriceBook: Boolean = false
 
     val id: String
-        get() = "${config.id}-$currency-${Math.abs(config.hashCode() * catalogHashCode)}-$index"
+        get() = pbName
 
     val customAttributes: List<CustomAttribute>
         get() {
@@ -77,15 +81,24 @@ class Amount(
     val amount: Double
         get() {
             val rng = Random(seed)
+            //val rng = SecureRandom.getInstanceStrong()
             val price = (config.minAmount + (config.maxAmount - config.minAmount) * rng.nextDouble()) / quantity
             val exchangeRate: Double = CatalogGenerator.EXCHANGE_RATES.getProperty(currency).toDouble()
 
+            val retVal: Double
+
             // 10% discount for sales pricelist
             if (sale) {
-                return price * exchangeRate * 0.9
+                retVal = price * exchangeRate * 0.9
+            }
+            else {
+                retVal = price * exchangeRate
             }
 
-            return price * exchangeRate
+            // Too expensive to write this to a file. See XmlParser.java for external parsing.
+            //File("price-entry.txt").appendText((round(retVal * 100) / 100).toString() + ",")
+
+            return retVal
         }
 }
 
@@ -131,8 +144,8 @@ class PriceTable(
 class ParentPriceBook(
     productIds: Sequence<String>,
     seed: Long, attributeDefinitions: Set<AttributeDefinition>, config: PricebookConfiguration,
-    currency: String, index: Int, catalogHashCode: Int
-) : Pricebook(config, currency, seed, attributeDefinitions, productIds, index, catalogHashCode)
+    currency: String, index: Int, catalogHashCode: Int, pbName: String
+) : Pricebook(config, currency, seed, attributeDefinitions, productIds, index, catalogHashCode, pbName)
 
 /**
  * Represents a single pricebook that has a parent pricebook, for example a sales pricebook that defines
@@ -154,8 +167,9 @@ class ChildPricebook(
     config: PricebookConfiguration,
     currency: String,
     index: Int,
-    catalogHashCode: Int
-) : Pricebook(config, currency, seed, attributeDefinitions, productIds, index, catalogHashCode) {
+    catalogHashCode: Int,
+    pbName: String
+) : Pricebook(config, currency, seed, attributeDefinitions, productIds, index, catalogHashCode, pbName) {
 
     // by default child price books are for sales (get 10% discount applied)
     override val salePriceBook: Boolean

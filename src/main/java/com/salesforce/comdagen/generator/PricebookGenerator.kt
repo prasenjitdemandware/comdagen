@@ -40,26 +40,29 @@ data class PricebookGenerator(
         get() {
             val pricebooks: MutableList<Pricebook> = mutableListOf()
 
-            for (currency in currencies) {
-                val rng = Random(configuration.initialSeed)
-                for (i in (1..configuration.elementCount)) {
-                    val seed = rng.nextLong()
+            //for (currency in currencies) {
+                //val rng = Random(configuration.initialSeed)
+
+                //for (i in (1..configuration.elementCount)) {
+
+                    //val seed = rng.nextLong()
 
                     // generate ParentPriceBook
                     val allProductIds = GeneratorHelper.getProductIds(catalogConfiguration)
 
                     val totalProductCount = catalogConfiguration.totalProductCount()
                     val productIds =
-                        getPartialProductSequence(seed, totalProductCount, configuration.coverage, allProductIds)
+                        getPartialProductSequence(configuration.seed, totalProductCount, configuration.coverage, allProductIds)
 
                     val parent = ParentPriceBook(
                         productIds,
-                        seed,
+                            configuration.seed,
                         metadata["PriceBook"].orEmpty(),
                         configuration,
-                        currency.toString(),
-                        i,
-                        catalogConfiguration.hashCode()
+                            configuration.currency,
+                            configuration.index,
+                        catalogConfiguration.hashCode(),
+                            configuration.pbName
                     )
                     pricebooks.add(parent)
 
@@ -69,22 +72,23 @@ data class PricebookGenerator(
                             ChildPricebook(
                                 parent,
                                 getPartialProductSequence(
-                                    seed,
+                                        configuration.seed,
                                     totalProductCount,
                                     configuration.coverage,
                                     allProductIds
                                 ),
-                                seed,
+                                    configuration.seed,
                                 metadata["PriceBook"].orEmpty(),
                                 childConfig,
-                                currency.toString(),
-                                i,
-                                catalogConfiguration.hashCode()
+                                    configuration.currency,
+                                    configuration.index,
+                                catalogConfiguration.hashCode(),
+                                    configuration.pbName
                             )
                         )
                     }
-                }
-            }
+                //}
+            //}
 
             return pricebooks.asSequence()
         }

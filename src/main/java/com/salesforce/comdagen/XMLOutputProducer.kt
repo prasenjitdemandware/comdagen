@@ -398,7 +398,7 @@ constructor(
                 for (i in (1..pricebookGenerator.configuration.elementCount)) {
                     //for (variationIndex in (1..sourceCodeGenerators.first().configuration.elementCount)) {
                         //var pbName = "$variationIndex-$i-NewPricebook-SC.xml"
-                        var pbName = "$i-NewPricebook-SC.xml"
+                        var pbName = "$i-NewPricebook-SC"
                         val seed = rng.nextLong()
                         pricebookGenerator.configuration.currency = currency.name
                         pricebookGenerator.configuration.index = i

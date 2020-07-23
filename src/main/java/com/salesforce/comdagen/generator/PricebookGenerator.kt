@@ -19,6 +19,7 @@ import com.salesforce.comdagen.model.ParentPriceBook
 import com.salesforce.comdagen.model.Pricebook
 import java.util.*
 
+
 /**
  * Generate sequence of Pricebook objects
  *
@@ -48,11 +49,20 @@ data class PricebookGenerator(
                     //val seed = rng.nextLong()
 
                     // generate ParentPriceBook
-                    val allProductIds = GeneratorHelper.getProductIds(catalogConfiguration)
+                    var allProductIds = GeneratorHelper.getProductIds(catalogConfiguration)
 
-                    val totalProductCount = catalogConfiguration.totalProductCount()
-                    val productIds =
-                        getPartialProductSequence(configuration.seed, totalProductCount, configuration.coverage, allProductIds)
+                    var totalProductCount = catalogConfiguration.totalProductCount()
+
+                    var productIds =
+                            getPartialProductSequence(configuration.seed, totalProductCount, configuration.coverage, allProductIds)
+
+                    // All price books not starting with name "1-" will have 4000 random price entries
+                    // selected from the complete product list
+                    if (!configuration.pbName.startsWith("1-")) {
+                        var allProductIdsMutable = allProductIds.toMutableList()
+                        allProductIdsMutable.shuffle()
+                        productIds = allProductIdsMutable.subList(0, 4000).asSequence()
+                    }
 
                     val parent = ParentPriceBook(
                         productIds,

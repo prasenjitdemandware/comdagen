@@ -53,8 +53,13 @@ data class PricebookGenerator(
 
                     var totalProductCount = catalogConfiguration.totalProductCount()
 
-                    var productIds =
-                            getPartialProductSequence(configuration.seed, totalProductCount, configuration.coverage, allProductIds)
+                    //System.out.println("Total product count = " + totalProductCount)
+
+                    // Use productIds for all pricebooks when we need same product price entries all across
+//                    var productIds =
+//                            getPartialProductSequence(configuration.seed, totalProductCount, configuration.coverage, allProductIds)
+
+                    var productIds = allProductIds
 
                     // All price books not starting with name "1-" will have 4000 random price entries
                     // selected from the complete product list
